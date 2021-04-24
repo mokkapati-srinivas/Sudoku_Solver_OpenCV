@@ -1,18 +1,11 @@
 import cv2
 import numpy as np
 from tensorflow.python.keras.models import load_model
-import json
-from matplotlib import image
 
 
 def extract_digit_from_each_image(cells):
     
     sudoku_unfilled=[[0 for i in range(9)] for j in range(9)]
-    
-    f = open("out.json", "w")
-    c = image.imread("C:/Users/VENU/Desktop/Sudoku_Project/Extracted_Cells/cell0.jpg")
-    f.write(json.dumps(c.tolist(), indent=4))
-    f.close()
     
     for i in range(9):
         for j in range(9):
@@ -71,6 +64,7 @@ def predict_number(extracted_image):
     extracted_image=extracted_image/255
     
     model=load_model("model_digit_recognition.h5")
+    model.summary()
     pred=model.predict(extracted_image,batch_size=1)
     
     #Predicted number is the index
