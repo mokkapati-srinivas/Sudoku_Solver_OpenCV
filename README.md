@@ -11,31 +11,19 @@
 
 ## 1. Loading the Image:
 
-We give the user a prompt saying to enter the path to the image in the computer. Using this path we load the image into the program.
+Load the image from the user machine.
 
 ## 2. Preprocessing the Image:
 
 ### 2.1 Blurring:
-We have different blurring techniques like Simple Blurring, Gaussian Blurring and Median Blurring.  
-1. Median Blurring is used for salt and pepper like noise reduction. Here, we don't have such kind of noise so I didn't consider it.   
-2. Simple blurring gives equal weightage to each pixel while blurring so I didn't consider this.  
-So, I used Gaussian Blurring.
+I used Gaussian Blurring which blurs the pixel based on weights given to the other pixels.
 
 ### 2.2 Thresholding:
-We have simple thresholding and adaptive thresholding.  
-1. Simple thresholding doesn't consider the lighting conditions so I didn't consider it.  
-So, I used Adaptive Thresholding.
+I used Adaptive thresholding because lighting condition might be unpredictable. This converts gray scale image to black and white.
 
 ### 2.3 Finding Contours:
-There are different ways we can retrive the contours.  
-1. RETR_TREE - This retrieves all the contours and their hierarchies.  
-2. RETR_EXTERNAL - This retrieves only external contours.  
-I used RETR_EXTERNAL because I don't need hierarchies of contours.
-  
-There are different approximation methods as well.  
-1. CHAIN_APPROX_NONE - This retrieves all the coordinates with respect to that contour.  
-2. CHAIN_APPROX_SIMPLE - This retrives only points that are essential to represent the curve.  
-I used CHAIN_APPROX_SIMPLE because there will be less space used to store the points.
+1. I used RETR_EXTERNAL retrieval method for contours as we don't need any hierarchies.
+2. I used CHAIN_APPROX_SIMPLE because there will be less space used to store the points.
   
 After finding the contours I retrieved the largest contour that looks like a curve with 4 corners since the sudoku is the largest area in the image. We approximate the corners for this curve and get those corners.  
 ![alt text](https://github.com/mokkapati-srinivas/Sudoku_Solver_OpenCV/blob/main/Contours.PNG)
@@ -55,15 +43,8 @@ Using the corners obtained in the image we get the perspective matrix. Using thi
 6. Now, our images are ready for prediction.
 
 ## 4. Model building and training using MNIST dataset:
-1. Since, I used a CNN we'll have sequential layers.
-2. First layer involves Conv2D, which is used to convolve the image matrix and find the important features that contribute to the result.
-3. Second layer involves MaxPooling. This is done to reduce the matrix size as it'll be increasing if we go deep into the network.
-4. Third and Fourth layer involves Conv2D again.
-5. Fifth layer is MaxPooling again.
-6. Now, I used Dense layer because we have to determine the class which the number belongs to.
-7. Now, I extracted the data from MNIST dataset and split them as x_train, y_train, x_test, y_test and normalized the data to range between [0,1].
-8. Now I trained the model using x_train, y_train.
-9. The validation accuracy of this model is 99.04%. So, I saved the model as "model_digit_recognition.h5" for further use.
+![alt text](https://github.com/mokkapati-srinivas/Sudoku_Solver_OpenCV/blob/main/Model_Summary.PNG)  
+The validation accuracy of this model is 99.04%. So, I saved the model as "model_digit_recognition.h5" for further use.
 
 ## 5. Predicting digits and storing them as a matrix:
 1. Before I send the processed cells to predict, I noticed there are some empty images which can't be detected by the model.
@@ -79,5 +60,5 @@ Using the corners obtained in the image we get the perspective matrix. Using thi
 ![alt text](https://github.com/mokkapati-srinivas/Sudoku_Solver_OpenCV/blob/main/Change_In_The_Values.PNG)
 
 3. Once the values are finalized, it is a classic backtracking solution to find the solved sudoku.
-4. If I found a solution we display it, else I printed "No solution found".  
+4. If I found a solution I displayd it, else I printed "No solution found".  
 ![alt text](https://github.com/mokkapati-srinivas/Sudoku_Solver_OpenCV/blob/main/Solved_Sudoku.PNG)
